@@ -1,14 +1,47 @@
 #import required modules
 from asteroidfield import *
 
+
+#Create the Shot Class - parent is CircleShape
+class Shot(CircleShape):
+    def __init__(self, x, y, radius):  #initialize
+        super().__init__(x,y,radius)  #initialize parent CircleShape - Required to draw and update asteroids!
+        self.x = x
+        self.y = y
+        self.position = pygame.Vector2(self.x,self.y)
+        self.radius = radius
+        self.lifespan = SHOT_LIFESPAN
+
+    def draw(self,screen,color):
+        self.color = color
+        pygame.draw.circle(screen,self.color,(self.position.x,self.position.y),self.radius,width=2)
+    
+    def update(self,dt):
+        self.position.x += self.velocity.x * dt
+        self.position.y += self.velocity.y * dt
+        self.lifespan -= dt
+        if self.lifespan <=0:
+            self.kill()
+
+
 #Create the Player Class - parent is CircleShape
 class Player(CircleShape):
     def __init__(self,x,y):  #initialize
         super().__init__(x,y,PLAYER_RADIUS)  #call parent initialize - required for draw/update
         self.rotation = 0
+        self.shot_timer = 0
     
+    def shoot(self):
+        bullet = Shot(self.position.x,self.position.y,SHOT_RADIUS)
+        bullet.velocity = pygame.Vector2(0, 1)
+        bullet.velocity.rotate_ip(self.rotation)
+        bullet.velocity *= PLAYER_SHOOT_SPEED
+
+
     #define / overide update - makes ship go vroom
     def update(self, dt):
+        if self.shot_timer > 0:
+            self.shot_timer -= dt
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
             self.rotate(-dt)
@@ -18,6 +51,10 @@ class Player(CircleShape):
             self.move(dt)
         if keys[pygame.K_s]:
             self.move(-dt)
+        if keys[pygame.K_SPACE]:
+            if self.shot_timer <= 0:
+                self.shoot()
+                self.shot_timer = PLAYER_SHOOT_COOLDOWN
     
     #define / overide move - also makes ship go vroom
     def move(self,dt):
