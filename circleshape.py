@@ -25,10 +25,9 @@ class CircleShape(pygame.sprite.Sprite):
 
     #lets define a method to detect collisions
     def collision(self,other):
-        distance = self.position.distance_to(other.position)
-        rad = self.radius + other.radius
-        if distance <= rad:
-            print(f"Debug: Collision detected")
+        distance = self.position.distance_to(other.position) #distance to the other obj
+        rad = self.radius + other.radius #combined radius of the circles of both obj's
+        if distance <= rad:  #check if the combined radius is touching or overlaping the other obj
             return True
         else:
             return False

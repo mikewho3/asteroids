@@ -6,8 +6,6 @@ from circleshape import *
 class Asteroid(CircleShape):
     def __init__(self, x, y, radius):  #initialize
         super().__init__(x,y,radius)  #initialize parent CircleShape - Required to draw and update asteroids!
-        #the next line is backup code to directly call the sprite containers and thus draw and update the asteroids, not needed since I called super
-        #pygame.sprite.Sprite.__init__(self,self.containers)
         self.x = x
         self.y = y
         self.radius = radius

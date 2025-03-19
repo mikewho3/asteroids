@@ -44,7 +44,7 @@ def main():  #begin main
         for event in pygame.event.get():  #for loop that stops the process if the game windows gets closed
             if event.type == pygame.QUIT:
                 return
-        screen.fill([0,0,0])  #make the screen color black
+        screen.fill(SCREEN_COLOR)  #make the screen color black
         for updatable in updatable_group:  #for loop to update all objects in the group
             updatable.update(dt)
 
@@ -71,7 +71,7 @@ def main():  #begin main
                     offset_y = random.randint(-int(current_intensity), int(current_intensity))
                     
                     # Clear screen
-                    screen.fill((0, 0, 0))
+                    screen.fill(SCREEN_COLOR)
                     
                     # Draw everything with shake offset
                     for drawable in drawable_group:
@@ -89,7 +89,7 @@ def main():  #begin main
                     pygame.time.delay(10)  # Small delay to control frame rate
                 
                 # One final frame without shake
-                screen.fill((0, 0, 0))
+                screen.fill(SCREEN_COLOR)
                 for drawable in drawable_group:
                     drawable.draw(screen, GAMEOVER_COLOR)
                 pygame.display.flip()
@@ -102,11 +102,11 @@ def main():  #begin main
 
         for drawable in drawable_group:  #for loop to draw all objects in the group
             if isinstance(drawable, Asteroid):
-                drawable.draw(screen,ASTEROID_COLOR)
+                drawable.draw(screen,ASTEROID_COLOR)  #set the default color for asteroids
             elif isinstance(drawable, Player):
-                drawable.draw(screen,PLAYER_COLOR)
+                drawable.draw(screen,PLAYER_COLOR)  #set the default color for the player ship
             else:
-                drawable.draw(screen,[255,255,255])
+                drawable.draw(screen,[255,255,255]) #if I missed anything, draw it and make it white
         pygame.display.flip()  #updates the display
         dt = clock.tick(60) / 1000  #make the clock tick
 
