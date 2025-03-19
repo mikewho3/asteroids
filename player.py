@@ -39,6 +39,6 @@ class Player(CircleShape):
         return [a, b, c]
 
     #draws the ship on the screen
-    def draw(self,screen):
-        color = [255,255,255]  #makes the color black - I found I can also do this by replacing color with [255,255,255]
-        pygame.draw.polygon(screen,color,self.triangle(),2)
+    def draw(self,screen,color):
+        self.color = color  #makes the color white - I found I can also do this by replacing color with [255,255,255]
+        pygame.draw.polygon(screen,self.color,self.triangle(),2)

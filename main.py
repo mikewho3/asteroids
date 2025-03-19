@@ -1,5 +1,7 @@
 #import required modules
 import pygame
+import sys
+import random
 from player import *
 
 def main():  #begin main
@@ -12,14 +14,14 @@ def main():  #begin main
 
     #Containers are defined here
     Player.containers = (updatable_group,drawable_group)
-    Asteroid.containers = (updatable_group,drawable_group)
+    Asteroid.containers = (updatable_group,drawable_group,asteroid_group)
     AsteroidField.containers = (updatable_group)
 
     #create the clock and call pygame.time.Clock()
     clock = pygame.time.Clock()
 
     running = True  #if True, game will play
-    dt = 0  #Not sure what this really is, but it's needed to draw the screen and time things properly
+    dt = 0  #Delta Time - Still kind of confusing, but it makes the screen draw rate independent of the screen fps
     
     #create the screen using variables defined in constants.py
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -45,9 +47,67 @@ def main():  #begin main
         screen.fill([0,0,0])  #make the screen color black
         for updatable in updatable_group:  #for loop to update all objects in the group
             updatable.update(dt)
+
+        #for loop to kill the player if they collide with an asteroid
+        for asteroid in asteroid_group:
+            if asteroid.collision(ship):
+                print("Game over!")
+
+                #Screen Shake Defined
+                shake_intensity = 20
+                shake_duration = 1000
+                shake_start = pygame.time.get_ticks()
+
+
+
+                # Game over animation loop
+                while pygame.time.get_ticks() - shake_start < shake_duration:
+                    # Calculate remaining shake percentage
+                    remaining = 1 - ((pygame.time.get_ticks() - shake_start) / shake_duration)
+                    current_intensity = shake_intensity * remaining
+                    
+                    # Generate random offset
+                    offset_x = random.randint(-int(current_intensity), int(current_intensity))
+                    offset_y = random.randint(-int(current_intensity), int(current_intensity))
+                    
+                    # Clear screen
+                    screen.fill((0, 0, 0))
+                    
+                    # Draw everything with shake offset
+                    for drawable in drawable_group:
+                        # Save original position
+                        original_pos = drawable.position.copy()
+                        # Apply shake offset temporarily
+                        drawable.position.x += offset_x
+                        drawable.position.y += offset_y
+                        # Draw with game over color
+                        drawable.draw(screen, GAMEOVER_COLOR)
+                        # Restore original position
+                        drawable.position = original_pos
+                    
+                    pygame.display.flip()
+                    pygame.time.delay(10)  # Small delay to control frame rate
+                
+                # One final frame without shake
+                screen.fill((0, 0, 0))
+                for drawable in drawable_group:
+                    drawable.draw(screen, GAMEOVER_COLOR)
+                pygame.display.flip()
+                
+                # Additional delay after shake effect
+                pygame.time.delay(1500)
+                sys.exit()
+
+
+
         for drawable in drawable_group:  #for loop to draw all objects in the group
-            drawable.draw(screen)
-        pygame.display.flip()  #not sure what this does, but it is important
+            if isinstance(drawable, Asteroid):
+                drawable.draw(screen,ASTEROID_COLOR)
+            elif isinstance(drawable, Player):
+                drawable.draw(screen,PLAYER_COLOR)
+            else:
+                drawable.draw(screen,[255,255,255])
+        pygame.display.flip()  #updates the display
         dt = clock.tick(60) / 1000  #make the clock tick
 
 if __name__ == "__main__":
