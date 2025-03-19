@@ -1,10 +1,13 @@
-from circleshape import *
-from constants import *
+#import required modules
+from asteroidfield import *
+
+#Create the Player Class - parent is CircleShape
 class Player(CircleShape):
-    def __init__(self,x,y):
-        super().__init__(x,y,PLAYER_RADIUS)
+    def __init__(self,x,y):  #initialize
+        super().__init__(x,y,PLAYER_RADIUS)  #call parent initialize - required for draw/update
         self.rotation = 0
     
+    #define / overide update - makes ship go vroom
     def update(self, dt):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
@@ -16,14 +19,17 @@ class Player(CircleShape):
         if keys[pygame.K_s]:
             self.move(-dt)
     
+    #define / overide move - also makes ship go vroom
     def move(self,dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += forward * PLAYER_SPEED * dt
 
 
+    #define / overide rotate - still helps make the ship go vroom
     def rotate(self,dt):
         self.rotation += (PLAYER_TURN_SPEED*dt)
     
+    #makes the ship a triangle
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         right = pygame.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5
@@ -32,6 +38,7 @@ class Player(CircleShape):
         c = self.position - forward * self.radius + right
         return [a, b, c]
 
+    #draws the ship on the screen
     def draw(self,screen):
-        color = [255,255,255]
+        color = [255,255,255]  #makes the color black - I found I can also do this by replacing color with [255,255,255]
         pygame.draw.polygon(screen,color,self.triangle(),2)

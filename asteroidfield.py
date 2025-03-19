@@ -1,9 +1,10 @@
+#import required modules
 import pygame
 import random
 from asteroid import *
 from constants import *
 
-
+#all of this is premade code from pygame and/or boot.dev
 class AsteroidField(pygame.sprite.Sprite):
     edges = [
         [
@@ -35,8 +36,6 @@ class AsteroidField(pygame.sprite.Sprite):
     def spawn(self, radius, position, velocity):
         asteroid = Asteroid(position.x, position.y, radius)
         asteroid.velocity = velocity
-        #print("DEBUG: AsteroidField-Spawn was called")
-        #print(f"DEBUG: {asteroid.x},{asteroid.y},Radius-{asteroid.radius},Velocity-{asteroid.velocity}")
 
     def update(self, dt):
         self.spawn_timer += dt
@@ -51,4 +50,3 @@ class AsteroidField(pygame.sprite.Sprite):
             position = edge[1](random.uniform(0, 1))
             kind = random.randint(1, ASTEROID_KINDS)
             self.spawn(ASTEROID_MIN_RADIUS * kind, position, velocity)
-            #print("Debug: Asteroid was Spawned")
