@@ -12,6 +12,7 @@ class Shot(CircleShape):
         self.radius = radius
         self.lifespan = SHOT_LIFESPAN
 
+
     def draw(self,screen,color):
         self.color = color
         pygame.draw.circle(screen,self.color,(self.position.x,self.position.y),self.radius,width=2)
@@ -30,6 +31,7 @@ class Player(CircleShape):
         super().__init__(x,y,PLAYER_RADIUS)  #call parent initialize - required for draw/update
         self.rotation = 0
         self.shot_timer = 0
+        self.invincible_timer = 0
     
     def shoot(self):
         bullet = Shot(self.position.x,self.position.y,SHOT_RADIUS)
@@ -42,6 +44,8 @@ class Player(CircleShape):
     def update(self, dt):
         if self.shot_timer > 0:
             self.shot_timer -= dt
+        if self.invincible_timer > 0:   #Make the player invincibility timer tick down
+            self.invincible_timer -= dt
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
             self.rotate(-dt)
@@ -60,6 +64,13 @@ class Player(CircleShape):
     def move(self,dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += forward * PLAYER_SPEED * dt
+
+    def reset(self):
+        self.x = SCREEN_WIDTH / 2
+        self.y = SCREEN_HEIGHT / 2
+        self.velocity_x = 0
+        self.velocity_y = 0
+        self.position = pygame.Vector2(self.x,self.y)
 
 
     #define / overide rotate - still helps make the ship go vroom

@@ -12,6 +12,7 @@ class Asteroid(CircleShape):
         self.y = y
         self.radius = radius
         self.lifespan = ASTEROID_LIFESPAN
+        self.position = pygame.Vector2(self.x,self.y)
 
     def draw(self,screen,color):
         self.color = color
@@ -34,8 +35,8 @@ class Asteroid(CircleShape):
         new_radius = self.radius - ASTEROID_MIN_RADIUS
         asteroid_a = Asteroid(self.position.x,self.position.y,new_radius)
         asteroid_b = Asteroid(self.position.x,self.position.y,new_radius)
-        asteroid_a_scale = asteroid_a_angle * 1.2
-        asteroid_b_scale = asteroid_b_angle * 1.2
+        asteroid_a_scale = asteroid_a_angle * ASTEROID_VELOCITY_MULTIPLIER
+        asteroid_b_scale = asteroid_b_angle * ASTEROID_VELOCITY_MULTIPLIER
         asteroid_a.velocity = pygame.Vector2(asteroid_a_scale)
         asteroid_b.velocity = pygame.Vector2(asteroid_b_scale)
 
