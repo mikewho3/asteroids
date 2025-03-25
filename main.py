@@ -30,12 +30,6 @@ def main():  #begin main
     #create the screen using variables defined in constants.py
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-    #Groups are defined here
-    updatable_group = pygame.sprite.Group()
-    drawable_group = pygame.sprite.Group()
-    asteroid_group = pygame.sprite.Group()
-    shot_group = pygame.sprite.Group()
-
     #Keep Score Here
     score = 0
 
@@ -54,11 +48,11 @@ def main():  #begin main
     AsteroidField.containers = (updatable_group)
     Shot.containers = (updatable_group,drawable_group,shot_group)
 
-    #create the clock and call pygame.time.Clock()
+    dt = 0
     clock = pygame.time.Clock()
+    
 
     running = True  #if True, game will play
-    dt = 0  #Delta Time - Still kind of confusing, but it makes the screen draw rate independent of the screen fps
     
     #Initialize the High Score System
     high_scores = load_high_scores()
@@ -97,12 +91,15 @@ def main():  #begin main
             formatted_timer = "0"
         else:
             formatted_timer = f"{ship.invincible_timer:.1f}"  #Format the timer to only show 1 decimal place
-        status_text = f"Score: {score} | Extra Lives: {lives} | High Score: {top_player_score} by {top_player_name}"
+        status_text = f"Score: {score} | Extra Lives: {lives} | High Score: {top_player_score} by {top_player_name} | Death Blossom: {ship.death_flower}"
+        if ship.spin_cooldown > 0:
+            formatted_death_flower = f"{ship.spin_cooldown:.1f}"
+            status_text += f" {formatted_death_flower}"
         if ship.invincible_timer > 0:
             status_text += f" | Invincible for {formatted_timer}/s"
         status_bar =font.render(status_text,True,(255,255,255))
-        control_bar = font.render("Controls | Move: W-A-S-D | Fire: SPACEBAR",True, (255,255,255))
-        bottom_bar = small_font.render("Music: Asteroids by Muzaproduction | Sound Effects: RetroLaser- Driken5482 | Medium Explosion- JuveriSetila  | GameOver- Tuomas_data | LostLife- Freesound Community | Used with permission under license from http://pixabay.com/service/license-summary/", True, (255,255,255))
+        control_bar = font.render("Controls | Move: -W- -A- -S- -D- | Fire: -SPACEBAR- | Death Blossom: -F- | Bullet Stream(In Development): -SPACEBAR- + -LEFTSHIFT-",True, (255,255,255))
+        bottom_bar = small_font.render("Music: Asteroids by Muzaproduction | Sound Effects: RetroLaser- Driken5482 | Medium Explosion- JuveriSetila  | GameOver- Tuomas_data | LostLife- Freesound Community | Wrong- Freesound Community | Used with permission under license from http://pixabay.com/service/license-summary/", True, (255,255,255))
         screen.blit(status_bar, (20,20))
         screen.blit(control_bar, (20, 20 + font.get_linesize()))  # Position below first line
         screen.blit(bottom_bar,(BOTTOM_BAR_LOC_X,BOTTOM_BAR_LOC_Y))
@@ -184,13 +181,16 @@ def main():  #begin main
                         formatted_timer = "0"
                     else:
                         formatted_timer = f"{ship.invincible_timer:.1f}"
-                    status_text = f"Score: {score} | Extra Lives: {lives} | High Score: {top_player_score} by {top_player_name}"
+                    status_text = f"Score: {score} | Extra Lives: {lives} | High Score: {top_player_score} by {top_player_name} | Death Blossom: {ship.death_flower}"
+                    if ship.spin_cooldown > 0:
+                        formatted_death_flower = f"{ship.spin_cooldown:.1f}"
+                        status_text += f" {formatted_death_flower}"
                     if ship.invincible_timer > 0:
                         status_text += f" | Invincible for {formatted_timer}/s"
                     status_bar =font.render(status_text,True,GAMEOVER_COLOR)
-                    control_bar = font.render("Controls | Move: W-A-S-D | Fire: SPACEBAR",True, GAMEOVER_COLOR)
+                    control_bar = font.render("Controls | Move: -W- -A- -S- -D- | Fire: -SPACEBAR- | Death Blossom: -F- | Bullet Stream(In Development): -SPACEBAR- + -LEFTSHIFT-",True, GAMEOVER_COLOR)
                     screen.blit(control_bar, (20, 20 + font.get_linesize()))  # Position below first line
-                    bottom_bar = small_font.render("Music: Asteroids by Muzaproduction | Sound Effects: RetroLaser- Driken5482 | Medium Explosion- JuveriSetila  | GameOver- Tuomas_data | LostLife- Freesound Community | Used with permission under license from http://pixabay.com/service/license-summary/", True, GAMEOVER_COLOR)
+                    bottom_bar = small_font.render("Music: Asteroids by Muzaproduction | Sound Effects: RetroLaser- Driken5482 | Medium Explosion- JuveriSetila  | GameOver- Tuomas_data | LostLife- Freesound Community | Wrong- Freesound Community | Used with permission under license from http://pixabay.com/service/license-summary/", True, GAMEOVER_COLOR)
                     screen.blit(status_bar, (20,20))
                     screen.blit(bottom_bar, (BOTTOM_BAR_LOC_X,BOTTOM_BAR_LOC_Y))
                     pygame.display.flip()
@@ -224,13 +224,16 @@ def main():  #begin main
                     formatted_timer = "0"
                 else:
                     formatted_timer = f"{ship.invincible_timer:.1f}"
-                status_text = f"Score: {score} | Extra Lives: {lives} | High Score: {top_player_score} by {top_player_name}"
+                status_text = f"Score: {score} | Extra Lives: {lives} | High Score: {top_player_score} by {top_player_name} | Death Blossom: {ship.death_flower}"
+                if ship.spin_cooldown > 0:
+                    formatted_death_flower = f"{ship.spin_cooldown:.1f}"
+                    status_text += f" {formatted_death_flower}"
                 if ship.invincible_timer > 0:
                     status_text += f" | Invincible for {formatted_timer}/s"
                 status_bar =font.render(status_text,True,GAMEOVER_COLOR)
-                control_bar = font.render("Controls | Move: W-A-S-D | Fire: SPACEBAR",True, GAMEOVER_COLOR)
+                control_bar = font.render("Controls | Move: -W- -A- -S- -D- | Fire: -SPACEBAR- | Death Blossom: -F- | Bullet Stream(In Development): -SPACEBAR- + -LEFTSHIFT-",True, GAMEOVER_COLOR)
                 screen.blit(control_bar, (20, 20 + font.get_linesize()))  # Position below first line
-                bottom_bar = small_font.render("Music: Asteroids by Muzaproduction | Sound Effects: RetroLaser- Driken5482 | Medium Explosion- JuveriSetila  | GameOver- Tuomas_data | LostLife- Freesound Community | Used with permission under license from http://pixabay.com/service/license-summary/", True, GAMEOVER_COLOR)
+                bottom_bar = small_font.render("Music: Asteroids by Muzaproduction | Sound Effects: RetroLaser- Driken5482 | Medium Explosion- JuveriSetila  | GameOver- Tuomas_data | LostLife- Freesound Community | Wrong- Freesound Community | Used with permission under license from http://pixabay.com/service/license-summary/", True, GAMEOVER_COLOR)
                 screen.blit(status_bar, (20,20))
                 screen.blit(bottom_bar, (BOTTOM_BAR_LOC_X,BOTTOM_BAR_LOC_Y))
                 pygame.display.flip()

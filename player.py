@@ -33,6 +33,24 @@ class Player(CircleShape):
         self.rotation = 0
         self.shot_timer = 0
         self.dead_timer = 1.2
+        self.is_spinning = False
+        self.spin_start_angle = 0
+        self.current_spin_angle = 0
+        self.spin_cooldown = 0
+        self.spin_cooldown_max = DEATH_FLOWER_COOLDOWN  
+        self.death_flower = "Available!"
+        self.bullet_stream_cooldown = 0
+        self.invincible_timer = 0
+        self.sound_delay_cooldown = 0
+
+    def start_spinning_attack(self, shot_group):
+        if self.spin_cooldown <= 0 and not self.is_spinning:
+            self.is_spinning = True
+            self.spin_start_angle = self.rotation
+            self.current_spin_angle = 0
+            self.bullet_group = shot_group
+            self.dead_timer = 1.5
+            self.invincible_timer = PLAYER_INVINCIBILITY_TIMER - 3.0
     
     def shoot(self):
         bullet = Shot(self.position.x,self.position.y,SHOT_RADIUS)
@@ -41,16 +59,39 @@ class Player(CircleShape):
         bullet.velocity *= PLAYER_SHOOT_SPEED
         laser = pygame.mixer.Sound("laser.mp3")
         pygame.mixer.Sound.play(laser)
-
+    
+    def bullet_stream(self):
+        bullet_amount = BULLET_STREAM_AMOUNT
+        for X in range(bullet_amount, 0, -1):
+            shoot = Shot(self.position.x,self.position.y,SHOT_RADIUS)
+            shoot.velocity = pygame.Vector2(0, 1)
+            shoot.velocity.rotate_ip(self.rotation)
+            shoot.velocity *= PLAYER_SHOOT_SPEED
+            laser = pygame.mixer.Sound("laser.mp3")
+            pygame.mixer.Sound.play(laser)
+            pygame.display.flip()
+            pygame.time.delay(BULLET_STREAM_DELAY)
 
     #define / overide update - makes ship go vroom
     def update(self, dt):
         if self.shot_timer > 0:
             self.shot_timer -= dt
+        if self.sound_delay_cooldown > 0:
+            self.sound_delay_cooldown -= dt
         if self.invincible_timer > 0:   #Make the player invincibility timer tick down
             self.invincible_timer -= dt
         if self.dead_timer > 0:   #Make the player death timer tick down
             self.dead_timer -= dt
+        if self.spin_cooldown > 0:
+            self.spin_cooldown -= dt
+        if self.spin_cooldown > 0:
+            self.death_flower = "Cooldown: "
+        else:
+            self.death_flower = "Available!"
+        if self.bullet_stream_cooldown > 0:
+            self.bullet_stream_cooldown -= dt
+        if self.is_spinning:
+            self.update_spinning_attack()
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
             if self.dead_timer > 0:
@@ -78,7 +119,61 @@ class Player(CircleShape):
             elif self.shot_timer <= 0:
                 self.shoot()
                 self.shot_timer = PLAYER_SHOOT_COOLDOWN
+        if keys[pygame.K_f]:
+            if self.dead_timer > 0:
+                pass
+            elif self.spin_cooldown > 0:
+                if self.sound_delay_cooldown > 0:
+                    pass
+                else:
+                    error_sound = pygame.mixer.Sound("error.mp3")
+                    pygame.mixer.Sound.play(error_sound, maxtime=1500)
+                    self.sound_delay_cooldown = SOUND_DELAY
+            else:
+                self.start_spinning_attack(shot_group)
+        if keys[pygame.K_SPACE] and keys[pygame.K_LSHIFT]:
+            if self.dead_timer > 0:
+                pass
+            elif self.bullet_stream_cooldown > 0:
+                if self.sound_delay_cooldown > 0:
+                    pass
+                else:
+                    error_sound = pygame.mixer.Sound("error.mp3")
+                    pygame.mixer.Sound.play(error_sound, maxtime=1500)
+                    self.sound_delay_cooldown = SOUND_DELAY
+            else:
+                self.bullet_stream()
+                self.bullet_stream_cooldown = BULLET_STREAM_COOLDOWN
+
     
+    def update_spinning_attack(self):
+        # Constants
+        full_rotation = 720
+        degrees_per_bullet = 45
+        rotation_speed = 15  # Adjust for desired speed
+        
+        # Calculate next angle
+        prev_angle = self.current_spin_angle
+        self.current_spin_angle += rotation_speed
+        
+        # Update ship angle
+        self.rotation = (self.spin_start_angle + self.current_spin_angle) % 720
+
+        # Check if we should fire bullets
+        # This checks all 4-degree marks we passed in this frame
+        for angle in range(int(prev_angle) // degrees_per_bullet * degrees_per_bullet, 
+                        int(self.current_spin_angle) // degrees_per_bullet * degrees_per_bullet + 1, 
+                        degrees_per_bullet):
+            if angle <= full_rotation:
+                self.shoot()
+        
+        # Check if we've completed a full rotation
+        if self.current_spin_angle >= full_rotation:
+            self.is_spinning = False
+            self.spin_cooldown = self.spin_cooldown_max
+
+
+
     #define / overide move - also makes ship go vroom
     def move(self,dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)

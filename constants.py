@@ -1,3 +1,4 @@
+import pygame
 #Constants defined for other modules to import
 
 #Screen Constants
@@ -6,13 +7,18 @@ SCREEN_HEIGHT = 1080
 SCREEN_HALF_WIDTH = SCREEN_WIDTH / 2
 SCREEN_HALF_HEIGHT = SCREEN_HEIGHT /2
 
+#Groups are defined here
+updatable_group = pygame.sprite.Group()
+drawable_group = pygame.sprite.Group()
+asteroid_group = pygame.sprite.Group()
+shot_group = pygame.sprite.Group()
 
 #Asteroid Constants
 ASTEROID_MIN_RADIUS = 20
 ASTEROID_KINDS = 3
 ASTEROID_SPAWN_RATE = 0.8  # seconds
 ASTEROID_MAX_RADIUS = ASTEROID_MIN_RADIUS * ASTEROID_KINDS
-ASTEROID_LIFESPAN = 35
+ASTEROID_LIFESPAN = 20
 ASTEROID_VELOCITY_MULTIPLIER = 1.5  #Currently Only affects asteroids that get hit by a bullet and split
 
 #Player Constants
@@ -24,18 +30,26 @@ PLAYER_SHOOT_COOLDOWN = 0.3
 PLAYER_STARTING_LIVES = 3
 PLAYER_INVINCIBILITY_TIMER = 5.5
 PLAYER_DEATH_TIMER = 2.0 
+DEATH_FLOWER_COOLDOWN = 30
+BULLET_STREAM_COOLDOWN = 10
+BULLET_STREAM_AMOUNT = 5
+BULLET_STREAM_DELAY = 50
 
 #Color Constants
 PLAYER_COLOR = [255,255,255]
-ASTEROID_COLOR = [255,255,255]
+ASTEROID_COLOR = [92,64,51]
 GAMEOVER_COLOR = [255,0,0]
 SCREEN_COLOR = [0,0,0]
 SHOT_COLOR = [155,0,155]
 
 #Shot Constants
 SHOT_RADIUS = 5
-SHOT_LIFESPAN = 2
+SHOT_LIFESPAN = 3.5
 
 #Bar Locations
 BOTTOM_BAR_LOC_X = 0
 BOTTOM_BAR_LOC_Y = SCREEN_HEIGHT - 16
+
+#Sound Delay
+
+SOUND_DELAY = 1.0

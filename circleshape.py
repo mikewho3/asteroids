@@ -15,7 +15,6 @@ class CircleShape(pygame.sprite.Sprite):
         self.position = pygame.Vector2(x, y)
         self.velocity = pygame.Vector2(0, 0)
         self.radius = radius
-        self.invincible_timer = 0
 
     def draw(self, screen,color):
         # sub-classes must override
