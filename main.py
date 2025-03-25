@@ -101,9 +101,12 @@ def main():  #begin main
         if ship.invincible_timer > 0:
             status_text += f" | Invincible for {formatted_timer}/s"
         status_bar =font.render(status_text,True,(255,255,255))
+        control_bar = font.render("Controls | Move: W-A-S-D | Fire: SPACEBAR",True, (255,255,255))
         bottom_bar = small_font.render("Music: Asteroids by Muzaproduction | Sound Effects: RetroLaser- Driken5482 | Medium Explosion- JuveriSetila  | GameOver- Tuomas_data | LostLife- Freesound Community | Used with permission under license from http://pixabay.com/service/license-summary/", True, (255,255,255))
         screen.blit(status_bar, (20,20))
+        screen.blit(control_bar, (20, 20 + font.get_linesize()))  # Position below first line
         screen.blit(bottom_bar,(BOTTOM_BAR_LOC_X,BOTTOM_BAR_LOC_Y))
+        pygame.display.flip()
         for updatable in updatable_group:  #for loop to update all objects in the group
             updatable.update(dt)
         if ship.position.x < 0:
@@ -141,9 +144,15 @@ def main():  #begin main
                     ouch = pygame.mixer.Sound("lostlife.mp3")
                     pygame.mixer.Sound.play(ouch)
                     lives -= 1
+                    died = big_font.render(f"You Died! Extra Lives: {lives}",True, GAMEOVER_COLOR)
+                    screen.blit(died,(SCREEN_WIDTH//2 - pygame.Surface.get_width(died)//2, SCREEN_HEIGHT//2 - 50))
+                    pygame.display.flip()
                 else:
                     dead = pygame.mixer.Sound("gameover.mp3")
                     pygame.mixer.Sound.play(dead)
+                    died = big_font.render(f"----GAME OVER ----",True, GAMEOVER_COLOR)
+                    screen.blit(died,(SCREEN_WIDTH//2 - pygame.Surface.get_width(died)//2, SCREEN_HEIGHT//2 - 50))
+                    pygame.display.flip()
                 #Screen Shake Defined
                 shake_intensity = 20
                 shake_duration = 1000
@@ -163,6 +172,14 @@ def main():  #begin main
                     
                     # Clear screen
                     screen.fill(SCREEN_COLOR)
+                    if lives > 0:
+                        died = big_font.render(f"You Died! Extra Lives: {lives}",True, GAMEOVER_COLOR)
+                        screen.blit(died,(SCREEN_WIDTH//2 - pygame.Surface.get_width(died)//2, SCREEN_HEIGHT//2 - 50))
+                        pygame.display.flip()
+                    else:
+                        died = big_font.render(f"----GAME OVER ----",True, GAMEOVER_COLOR)
+                        screen.blit(died,(SCREEN_WIDTH//2 - pygame.Surface.get_width(died)//2, SCREEN_HEIGHT//2 - 50))
+                        pygame.display.flip()
                     if ship.invincible_timer <= 0:
                         formatted_timer = "0"
                     else:
@@ -171,9 +188,12 @@ def main():  #begin main
                     if ship.invincible_timer > 0:
                         status_text += f" | Invincible for {formatted_timer}/s"
                     status_bar =font.render(status_text,True,GAMEOVER_COLOR)
+                    control_bar = font.render("Controls | Move: W-A-S-D | Fire: SPACEBAR",True, GAMEOVER_COLOR)
+                    screen.blit(control_bar, (20, 20 + font.get_linesize()))  # Position below first line
                     bottom_bar = small_font.render("Music: Asteroids by Muzaproduction | Sound Effects: RetroLaser- Driken5482 | Medium Explosion- JuveriSetila  | GameOver- Tuomas_data | LostLife- Freesound Community | Used with permission under license from http://pixabay.com/service/license-summary/", True, GAMEOVER_COLOR)
                     screen.blit(status_bar, (20,20))
                     screen.blit(bottom_bar, (BOTTOM_BAR_LOC_X,BOTTOM_BAR_LOC_Y))
+                    pygame.display.flip()
                     
                     # Draw everything with shake offset
                     for drawable in drawable_group:
@@ -192,6 +212,14 @@ def main():  #begin main
                 
                 # One final frame without shake
                 screen.fill(SCREEN_COLOR)
+                if lives > 0:
+                    died = big_font.render(f"You Died! Extra Lives: {lives}",True, GAMEOVER_COLOR)
+                    screen.blit(died,(SCREEN_WIDTH//2 - pygame.Surface.get_width(died)//2, SCREEN_HEIGHT//2 - 50))
+                    pygame.display.flip()
+                else:
+                    died = big_font.render(f"----GAME OVER ----",True, GAMEOVER_COLOR)
+                    screen.blit(died,(SCREEN_WIDTH//2 - pygame.Surface.get_width(died)//2, SCREEN_HEIGHT//2 - 50))
+                    pygame.display.flip()
                 if ship.invincible_timer <= 0:
                     formatted_timer = "0"
                 else:
@@ -200,9 +228,12 @@ def main():  #begin main
                 if ship.invincible_timer > 0:
                     status_text += f" | Invincible for {formatted_timer}/s"
                 status_bar =font.render(status_text,True,GAMEOVER_COLOR)
+                control_bar = font.render("Controls | Move: W-A-S-D | Fire: SPACEBAR",True, GAMEOVER_COLOR)
+                screen.blit(control_bar, (20, 20 + font.get_linesize()))  # Position below first line
                 bottom_bar = small_font.render("Music: Asteroids by Muzaproduction | Sound Effects: RetroLaser- Driken5482 | Medium Explosion- JuveriSetila  | GameOver- Tuomas_data | LostLife- Freesound Community | Used with permission under license from http://pixabay.com/service/license-summary/", True, GAMEOVER_COLOR)
                 screen.blit(status_bar, (20,20))
                 screen.blit(bottom_bar, (BOTTOM_BAR_LOC_X,BOTTOM_BAR_LOC_Y))
+                pygame.display.flip()
                 for drawable in drawable_group:
                     drawable.draw(screen, GAMEOVER_COLOR)
                 pygame.display.flip()
@@ -210,9 +241,17 @@ def main():  #begin main
                 # Additional delay after shake effect
                 pygame.time.delay(1500)
                 if lives > 0:
+                    died = big_font.render(f"You Died! Extra Lives: {lives}",True, GAMEOVER_COLOR)
+                    screen.blit(died,(SCREEN_WIDTH//2 - pygame.Surface.get_width(died)//2, SCREEN_HEIGHT//2 - 50))
+                    pygame.display.flip()
+                    pygame.time.delay(2000)
                     ship.invincible_timer = PLAYER_INVINCIBILITY_TIMER
                     ship.reset()
                 else:
+                    died = big_font.render(f"----GAME OVER ----",True, GAMEOVER_COLOR)
+                    screen.blit(died,(SCREEN_WIDTH//2 - pygame.Surface.get_width(died)//2, SCREEN_HEIGHT//2 - 50))
+                    pygame.display.flip()
+                    pygame.time.delay(2000)
                     if score > top_player_score:
                         name = get_player_name(screen,font)
                         save_high_score(name,score)

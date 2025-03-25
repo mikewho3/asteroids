@@ -32,7 +32,7 @@ class Player(CircleShape):
         super().__init__(x,y,PLAYER_RADIUS)  #call parent initialize - required for draw/update
         self.rotation = 0
         self.shot_timer = 0
-        self.dead_timer = 2
+        self.dead_timer = 1.2
     
     def shoot(self):
         bullet = Shot(self.position.x,self.position.y,SHOT_RADIUS)
