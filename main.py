@@ -2,20 +2,30 @@
 # Using Pygame and Boot.dev
 # https://www.boot.dev/u/mikewho3
 # No claim is made to any code inside as this is a learning project
-
+# Asteroids Background Music by Muzaproduction, Used with permission under license from http://pixabay.com/service/license-summary/
+#
+#
+#
 
 
 #import required modules
 import pygame
 import sys
 import random
-from player import *
+from asteroidfield import *
+from highscore import *
 
 def main():  #begin main
-    pygame.init()  #initialize pygame
-    #Currently Not Working pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=2048,devicename= "System Sounds")
+
+    #initialize pygame
+    pygame.init()  
+
+    #initialize music
+    pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=2048,devicename= "System Sounds")
+
     #Load the music
-    #Currently Not Working pygame.mixer.music.load("asteroids.ogg")
+    pygame.mixer.music.load("asteroids.ogg")
+    pygame.mixer.music.set_volume(0.8)
 
     #create the screen using variables defined in constants.py
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -33,8 +43,10 @@ def main():  #begin main
     lives = PLAYER_STARTING_LIVES
     
 
-    #Render starting score
+    #define the fonts for various things
+    big_font = pygame.font.Font(None, 48)
     font = pygame.font.Font(None, 36)
+    small_font = pygame.font.Font(None, 16)
 
     #Containers are defined here
     Player.containers = (updatable_group,drawable_group)
@@ -48,6 +60,12 @@ def main():  #begin main
     running = True  #if True, game will play
     dt = 0  #Delta Time - Still kind of confusing, but it makes the screen draw rate independent of the screen fps
     
+    #Initialize the High Score System
+    high_scores = load_high_scores()
+    high_scores = high_scores[:10]
+    top_player_name = high_scores[0][0]
+    top_player_score = high_scores[0][1]
+
 
 
     #Starting the game
@@ -63,15 +81,26 @@ def main():  #begin main
     asfield = AsteroidField()
 
     #Start the Music
-    #Currently Not Working pygame.mixer.music.play(-1)
+    pygame.mixer.music.play(-1)
+
+
+
     #begin the main game Loop
     while running:
         for event in pygame.event.get():  #for loop that stops the process if the game windows gets closed
             if event.type == pygame.QUIT:
+                print("Game Over!")
+                print(f"Game Score: {score}")
                 return
         screen.fill(SCREEN_COLOR)  #make the screen color black
-        status_bar = font.render(f"Score: {score}      Extra Lives: {lives}", True, (255,255,255))
+        if ship.invincible_timer <= 0:
+            formatted_timer = "0"
+        else:
+            formatted_timer = f"{ship.invincible_timer:.1f}"
+        status_bar = font.render(f"Score: {score}  |  High Score: {top_player_score} by {top_player_name} | Extra Lives: {lives}  |  Invincible for {formatted_timer}/s", True, (255,255,255))
+        bottom_bar = small_font.render("Music: Asteroids by Muzaproduction | Sound Effects: RetroLaser- Driken5482 | Medium Explosion- JuveriSetila  | GameOver- Tuomas_data | LostLife- Freesound Community | Used with permission under license from http://pixabay.com/service/license-summary/", True, (255,255,255))
         screen.blit(status_bar, (20,20))
+        screen.blit(bottom_bar,(BOTTOM_BAR_LOC_X,BOTTOM_BAR_LOC_Y))
         for updatable in updatable_group:  #for loop to update all objects in the group
             updatable.update(dt)
         if ship.position.x < 0:
@@ -103,8 +132,15 @@ def main():  #begin main
         #for loop to kill the player if they collide with an asteroid
         for asteroid in asteroid_group:
             if asteroid.collision(ship):
-
-
+                if ship.invincible_timer > 0:
+                    continue
+                if lives > 0:
+                    ouch = pygame.mixer.Sound("lostlife.mp3")
+                    pygame.mixer.Sound.play(ouch)
+                    lives -= 1
+                else:
+                    dead = pygame.mixer.Sound("gameover.mp3")
+                    pygame.mixer.Sound.play(dead)
                 #Screen Shake Defined
                 shake_intensity = 20
                 shake_duration = 1000
@@ -124,8 +160,14 @@ def main():  #begin main
                     
                     # Clear screen
                     screen.fill(SCREEN_COLOR)
-                    status_bar = font.render(f"Score: {score}      Extra Lives: {lives}", True, GAMEOVER_COLOR)
+                    if ship.invincible_timer <= 0:
+                        formatted_timer = "0"
+                    else:
+                        formatted_timer = f"{ship.invincible_timer:.1f}"
+                    status_bar = font.render(f"Score: {score}  |  High Score: {top_player_score} by {top_player_name} | Extra Lives: {lives}  |  Invincible for {formatted_timer}/s", True, GAMEOVER_COLOR)
+                    bottom_bar = small_font.render("Music: Asteroids by Muzaproduction | Sound Effects: RetroLaser- Driken5482 | Medium Explosion- JuveriSetila  | GameOver- Tuomas_data | LostLife- Freesound Community | Used with permission under license from http://pixabay.com/service/license-summary/", True, GAMEOVER_COLOR)
                     screen.blit(status_bar, (20,20))
+                    screen.blit(bottom_bar, (BOTTOM_BAR_LOC_X,BOTTOM_BAR_LOC_Y))
                     
                     # Draw everything with shake offset
                     for drawable in drawable_group:
@@ -144,8 +186,14 @@ def main():  #begin main
                 
                 # One final frame without shake
                 screen.fill(SCREEN_COLOR)
-                status_bar = font.render(f"Score: {score}      Extra Lives: {lives}", True, GAMEOVER_COLOR)
+                if ship.invincible_timer <= 0:
+                    formatted_timer = "0"
+                else:
+                    formatted_timer = f"{ship.invincible_timer:.1f}"
+                status_bar = font.render(f"Score: {score}  |  High Score: {top_player_score} by {top_player_name} | Extra Lives: {lives}  |  Invincible for {formatted_timer}/s", True, GAMEOVER_COLOR)
+                bottom_bar = small_font.render("Music: Asteroids by Muzaproduction | Sound Effects: RetroLaser- Driken5482 | Medium Explosion- JuveriSetila  | GameOver- Tuomas_data | LostLife- Freesound Community | Used with permission under license from http://pixabay.com/service/license-summary/", True, GAMEOVER_COLOR)
                 screen.blit(status_bar, (20,20))
+                screen.blit(bottom_bar, (BOTTOM_BAR_LOC_X,BOTTOM_BAR_LOC_Y))
                 for drawable in drawable_group:
                     drawable.draw(screen, GAMEOVER_COLOR)
                 pygame.display.flip()
@@ -153,12 +201,14 @@ def main():  #begin main
                 # Additional delay after shake effect
                 pygame.time.delay(1500)
                 if lives > 0:
-                    lives -= 1
                     ship.invincible_timer = PLAYER_INVINCIBILITY_TIMER
                     ship.reset()
                 else:
-                    print("GAME OVER!")
-                    print(f"Final Score: {score}")
+                    if score > top_player_score:
+                        name = get_player_name(screen,font)
+                        save_high_score(name,score)
+                    print("Game Over!")
+                    print(f"Game Score: {score}")
                     sys.exit()
 
 

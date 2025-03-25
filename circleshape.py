@@ -1,5 +1,6 @@
 #import required modules
 import pygame
+from constants import *
 
 
 # Base class for game objects
@@ -14,6 +15,7 @@ class CircleShape(pygame.sprite.Sprite):
         self.position = pygame.Vector2(x, y)
         self.velocity = pygame.Vector2(0, 0)
         self.radius = radius
+        self.invincible_timer = 0
 
     def draw(self, screen,color):
         # sub-classes must override
@@ -27,4 +29,4 @@ class CircleShape(pygame.sprite.Sprite):
     def collision(self,other):
         distance = self.position.distance_to(other.position) #distance to the other obj
         rad = self.radius + other.radius #combined radius of the circles of both obj's
-        return distance <= rad  #check if the combined radius is touching or overlaping the other obj
+        return distance <= rad

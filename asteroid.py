@@ -1,8 +1,7 @@
 #import required modules
 import pygame
 import random
-from circleshape import *
-from constants import *
+from player import *
 
 #create the Asteroid class, parent is CircleShape
 class Asteroid(CircleShape):
@@ -27,6 +26,8 @@ class Asteroid(CircleShape):
 
     def split(self):
         self.kill()
+        boom = pygame.mixer.Sound("boom.mp3")
+        pygame.mixer.Sound.play(boom)
         if self.radius <= ASTEROID_MIN_RADIUS:
             return
         angle = random.uniform(20,50)

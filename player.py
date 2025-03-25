@@ -1,5 +1,6 @@
 #import required modules
-from asteroidfield import *
+import pygame
+from circleshape import *
 
 
 #Create the Shot Class - parent is CircleShape
@@ -31,13 +32,15 @@ class Player(CircleShape):
         super().__init__(x,y,PLAYER_RADIUS)  #call parent initialize - required for draw/update
         self.rotation = 0
         self.shot_timer = 0
-        self.invincible_timer = 0
+        self.dead_timer = 2
     
     def shoot(self):
         bullet = Shot(self.position.x,self.position.y,SHOT_RADIUS)
         bullet.velocity = pygame.Vector2(0, 1)
         bullet.velocity.rotate_ip(self.rotation)
         bullet.velocity *= PLAYER_SHOOT_SPEED
+        laser = pygame.mixer.Sound("laser.mp3")
+        pygame.mixer.Sound.play(laser)
 
 
     #define / overide update - makes ship go vroom
@@ -46,17 +49,33 @@ class Player(CircleShape):
             self.shot_timer -= dt
         if self.invincible_timer > 0:   #Make the player invincibility timer tick down
             self.invincible_timer -= dt
+        if self.dead_timer > 0:   #Make the player death timer tick down
+            self.dead_timer -= dt
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
-            self.rotate(-dt)
+            if self.dead_timer > 0:
+                pass
+            else:
+                self.rotate(-dt)
         if keys[pygame.K_d]:
-            self.rotate(dt)
+            if self.dead_timer > 0:
+                pass
+            else:
+                self.rotate(dt)
         if keys[pygame.K_w]:
-            self.move(dt)
+            if self.dead_timer > 0:
+                pass
+            else:
+                self.move(dt)
         if keys[pygame.K_s]:
-            self.move(-dt)
+            if self.dead_timer > 0:
+                pass
+            else:
+                self.move(-dt)
         if keys[pygame.K_SPACE]:
-            if self.shot_timer <= 0:
+            if self.dead_timer > 0:
+                pass
+            elif self.shot_timer <= 0:
                 self.shoot()
                 self.shot_timer = PLAYER_SHOOT_COOLDOWN
     
@@ -66,6 +85,7 @@ class Player(CircleShape):
         self.position += forward * PLAYER_SPEED * dt
 
     def reset(self):
+        self.dead_timer = PLAYER_DEATH_TIMER
         self.x = SCREEN_WIDTH / 2
         self.y = SCREEN_HEIGHT / 2
         self.velocity_x = 0
