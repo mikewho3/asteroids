@@ -1,11 +1,11 @@
-# Asteroids Guided Project by Mike Wylder
-# Using Pygame and Boot.dev
-# https://www.boot.dev/u/mikewho3
-# No claim is made to any code inside as this is a learning project
-# Asteroids Background Music by Muzaproduction, Used with permission under license from http://pixabay.com/service/license-summary/
-#
-#
-#
+##############################################################################################################
+# Asteroids Guided Project by Mike Wylder                                                                    #
+# Using Pygame and Boot.dev                                                                                  #
+# https://www.boot.dev/u/mikewho3                                                                            #
+#                                                                                                            #
+# All Music/Sound used with permission under license from http://pixabay.com/service/license-summary/        #
+##############################################################################################################
+
 
 
 #import required modules
@@ -93,11 +93,14 @@ def main():  #begin main
                 print(f"Game Score: {score}")
                 return
         screen.fill(SCREEN_COLOR)  #make the screen color black
-        if ship.invincible_timer <= 0:
+        if ship.invincible_timer <= 0:  #Lets not display negative values on the timer shall we?
             formatted_timer = "0"
         else:
-            formatted_timer = f"{ship.invincible_timer:.1f}"
-        status_bar = font.render(f"Score: {score}  |  High Score: {top_player_score} by {top_player_name} | Extra Lives: {lives}  |  Invincible for {formatted_timer}/s", True, (255,255,255))
+            formatted_timer = f"{ship.invincible_timer:.1f}"  #Format the timer to only show 1 decimal place
+        status_text = f"Score: {score} | Extra Lives: {lives} | High Score: {top_player_score} by {top_player_name}"
+        if ship.invincible_timer > 0:
+            status_text += f" | Invincible for {formatted_timer}/s"
+        status_bar =font.render(status_text,True,(255,255,255))
         bottom_bar = small_font.render("Music: Asteroids by Muzaproduction | Sound Effects: RetroLaser- Driken5482 | Medium Explosion- JuveriSetila  | GameOver- Tuomas_data | LostLife- Freesound Community | Used with permission under license from http://pixabay.com/service/license-summary/", True, (255,255,255))
         screen.blit(status_bar, (20,20))
         screen.blit(bottom_bar,(BOTTOM_BAR_LOC_X,BOTTOM_BAR_LOC_Y))
@@ -164,7 +167,10 @@ def main():  #begin main
                         formatted_timer = "0"
                     else:
                         formatted_timer = f"{ship.invincible_timer:.1f}"
-                    status_bar = font.render(f"Score: {score}  |  High Score: {top_player_score} by {top_player_name} | Extra Lives: {lives}  |  Invincible for {formatted_timer}/s", True, GAMEOVER_COLOR)
+                    status_text = f"Score: {score} | Extra Lives: {lives} | High Score: {top_player_score} by {top_player_name}"
+                    if ship.invincible_timer > 0:
+                        status_text += f" | Invincible for {formatted_timer}/s"
+                    status_bar =font.render(status_text,True,GAMEOVER_COLOR)
                     bottom_bar = small_font.render("Music: Asteroids by Muzaproduction | Sound Effects: RetroLaser- Driken5482 | Medium Explosion- JuveriSetila  | GameOver- Tuomas_data | LostLife- Freesound Community | Used with permission under license from http://pixabay.com/service/license-summary/", True, GAMEOVER_COLOR)
                     screen.blit(status_bar, (20,20))
                     screen.blit(bottom_bar, (BOTTOM_BAR_LOC_X,BOTTOM_BAR_LOC_Y))
@@ -190,7 +196,10 @@ def main():  #begin main
                     formatted_timer = "0"
                 else:
                     formatted_timer = f"{ship.invincible_timer:.1f}"
-                status_bar = font.render(f"Score: {score}  |  High Score: {top_player_score} by {top_player_name} | Extra Lives: {lives}  |  Invincible for {formatted_timer}/s", True, GAMEOVER_COLOR)
+                status_text = f"Score: {score} | Extra Lives: {lives} | High Score: {top_player_score} by {top_player_name}"
+                if ship.invincible_timer > 0:
+                    status_text += f" | Invincible for {formatted_timer}/s"
+                status_bar =font.render(status_text,True,GAMEOVER_COLOR)
                 bottom_bar = small_font.render("Music: Asteroids by Muzaproduction | Sound Effects: RetroLaser- Driken5482 | Medium Explosion- JuveriSetila  | GameOver- Tuomas_data | LostLife- Freesound Community | Used with permission under license from http://pixabay.com/service/license-summary/", True, GAMEOVER_COLOR)
                 screen.blit(status_bar, (20,20))
                 screen.blit(bottom_bar, (BOTTOM_BAR_LOC_X,BOTTOM_BAR_LOC_Y))
