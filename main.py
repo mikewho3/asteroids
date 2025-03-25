@@ -98,7 +98,7 @@ def main():  #begin main
         if ship.invincible_timer > 0:
             status_text += f" | Invincible for {formatted_timer}/s"
         status_bar =font.render(status_text,True,(255,255,255))
-        control_bar = font.render("Controls | Move: -W- -A- -S- -D- | Fire: -SPACEBAR- | Death Blossom: -F- | Bullet Stream(In Development): -SPACEBAR- + -LEFTSHIFT-",True, (255,255,255))
+        control_bar = font.render("Controls | Move: -W- -A- -S- -D- | Fire: -SPACEBAR- | Death Blossom: -F- | Bullet Stream(Not Working): -SPACEBAR- + -LEFTSHIFT-",True, (255,255,255))
         bottom_bar = small_font.render("Music: Asteroids by Muzaproduction | Sound Effects: RetroLaser- Driken5482 | Medium Explosion- JuveriSetila  | GameOver- Tuomas_data | LostLife- Freesound Community | Wrong- Freesound Community | Used with permission under license from http://pixabay.com/service/license-summary/", True, (255,255,255))
         screen.blit(status_bar, (20,20))
         screen.blit(control_bar, (20, 20 + font.get_linesize()))  # Position below first line
@@ -188,7 +188,7 @@ def main():  #begin main
                     if ship.invincible_timer > 0:
                         status_text += f" | Invincible for {formatted_timer}/s"
                     status_bar =font.render(status_text,True,GAMEOVER_COLOR)
-                    control_bar = font.render("Controls | Move: -W- -A- -S- -D- | Fire: -SPACEBAR- | Death Blossom: -F- | Bullet Stream(In Development): -SPACEBAR- + -LEFTSHIFT-",True, GAMEOVER_COLOR)
+                    control_bar = font.render("Controls | Move: -W- -A- -S- -D- | Fire: -SPACEBAR- | Death Blossom: -F- | Bullet Stream(Not Working): -SPACEBAR- + -LEFTSHIFT-",True, GAMEOVER_COLOR)
                     screen.blit(control_bar, (20, 20 + font.get_linesize()))  # Position below first line
                     bottom_bar = small_font.render("Music: Asteroids by Muzaproduction | Sound Effects: RetroLaser- Driken5482 | Medium Explosion- JuveriSetila  | GameOver- Tuomas_data | LostLife- Freesound Community | Wrong- Freesound Community | Used with permission under license from http://pixabay.com/service/license-summary/", True, GAMEOVER_COLOR)
                     screen.blit(status_bar, (20,20))
@@ -231,7 +231,7 @@ def main():  #begin main
                 if ship.invincible_timer > 0:
                     status_text += f" | Invincible for {formatted_timer}/s"
                 status_bar =font.render(status_text,True,GAMEOVER_COLOR)
-                control_bar = font.render("Controls | Move: -W- -A- -S- -D- | Fire: -SPACEBAR- | Death Blossom: -F- | Bullet Stream(In Development): -SPACEBAR- + -LEFTSHIFT-",True, GAMEOVER_COLOR)
+                control_bar = font.render("Controls | Move: -W- -A- -S- -D- | Fire: -SPACEBAR- | Death Blossom: -F- | Bullet Stream(Not Working): -SPACEBAR- + -LEFTSHIFT-",True, GAMEOVER_COLOR)
                 screen.blit(control_bar, (20, 20 + font.get_linesize()))  # Position below first line
                 bottom_bar = small_font.render("Music: Asteroids by Muzaproduction | Sound Effects: RetroLaser- Driken5482 | Medium Explosion- JuveriSetila  | GameOver- Tuomas_data | LostLife- Freesound Community | Wrong- Freesound Community | Used with permission under license from http://pixabay.com/service/license-summary/", True, GAMEOVER_COLOR)
                 screen.blit(status_bar, (20,20))
