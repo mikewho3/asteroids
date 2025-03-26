@@ -1,6 +1,5 @@
 #import required modules
 import pygame
-from constants import *
 
 
 # Base class for game objects

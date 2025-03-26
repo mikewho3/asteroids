@@ -37,8 +37,9 @@ class AsteroidField(pygame.sprite.Sprite):
         asteroid.velocity = velocity
 
     def update(self, dt):
+        import gamestate
         self.spawn_timer += dt
-        if self.spawn_timer > ASTEROID_SPAWN_RATE:
+        if self.spawn_timer > gamestate.asteroid_spawn_rate:
             self.spawn_timer = 0
 
             # spawn a new asteroid at a random edge

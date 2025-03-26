@@ -44,7 +44,7 @@ def load_high_scores():
         high_scores.sort(key=lambda x: x[1], reverse=True)
     except FileNotFoundError:
         with open("high_scores.txt", "a") as file:
-            file.write(f"MikeWho3,001\n")
+            file.write(f"MikeWho3,1582\n")
         print("No high scores file found. Creating a new one.")
         with open("high_scores.txt", "r") as file:
             for line in file:

@@ -27,6 +27,7 @@ class Asteroid(CircleShape):
     def split(self):
         self.kill()
         boom = pygame.mixer.Sound("boom.mp3")
+        pygame.mixer.Sound.set_volume(boom,0.6)
         pygame.mixer.Sound.play(boom, maxtime=1500)
         if self.radius <= ASTEROID_MIN_RADIUS:
             return

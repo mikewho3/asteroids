@@ -1,0 +1,10 @@
+asteroid_spawn_rate = 0.8
+key_lock = 0
+key_lock_kp_enter = 0
+key_lock_kp_plus = 0
+key_lock_t = 0
+key_lock_f = 0
+key_lock_v = 0
+key_lock_1 = 0
+key_lock_2 = 0
+key_lock_5 = 0
